@@ -38,8 +38,29 @@ export async function POST (request: Request) {
 
     wrokingSummary = response.choices[0].text
   }
-  
-  return await updateSummary(wrokingSummary, audioItemId)
+
+  const prompt : string = ` write a header for the following summary of a meeting: ${wrokingSummary}`
+
+  const response = await openai.completions.create({
+    model: "gpt-3.5-turbo-instruct",
+    max_tokens: 50,
+    prompt: prompt
+  })
+
+  const heading = response.choices[0].text
+
+  const summaryError = await updateSummary(wrokingSummary, audioItemId)
+
+  if (summaryError) {
+    return NextResponse.json({ error: summaryError.message}, {status:500});
+  }
+  const headingError = await updateHeading(heading, audioItemId)
+
+  if (headingError) {
+    return NextResponse.json({ error: headingError.message}, {status:500}); 
+  }
+
+  return NextResponse.json({status:200});
 }
 
 async function updateSummary(summary: string, audioItemId: string) {
@@ -47,7 +68,17 @@ async function updateSummary(summary: string, audioItemId: string) {
   const supabase = createClient(cookieStore)
   const { error } = await supabase.from("audio_data").update({summary: summary}).eq('id', audioItemId)
   if (error) {
-    return NextResponse.json({ error: error.message}, {status:500});
+    return error;
   } 
-  return NextResponse.json({status:200});
+  return null;
+}
+
+async function updateHeading(heading: string, audioItemId: string) {
+  const cookieStore = cookies()
+  const supabase = createClient(cookieStore)
+  const { error } = await supabase.from("audio_data").update({heading: heading}).eq('id', audioItemId)
+  if (error) {
+    return error;
+  } 
+  return null;
 }

@@ -1,6 +1,7 @@
 "use client"
 
 import { AudioData } from "@/lib/database.types";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useEffect } from "react";
 
@@ -8,6 +9,7 @@ export default function AudioItem({audioData}: {audioData: AudioData}) {
     const [audioUrl, setAudioUrl] = useState<string | null>(null);
     const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
     const [transcription, setTrascription] = useState<string | null>();
+    const router = useRouter();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -54,6 +56,7 @@ export default function AudioItem({audioData}: {audioData: AudioData}) {
             }).catch(console.error);
 
             console.log(res2)
+            router.refresh();
         }
     } 
 
@@ -66,6 +69,7 @@ export default function AudioItem({audioData}: {audioData: AudioData}) {
             }).catch(console.error);
 
             console.log(res)
+            router.refresh();
         }
     }
 
@@ -82,6 +86,7 @@ export default function AudioItem({audioData}: {audioData: AudioData}) {
             }).catch(console.error);
 
             console.log(res)
+            router.refresh();
         }
     }
 
@@ -92,6 +97,7 @@ export default function AudioItem({audioData}: {audioData: AudioData}) {
         }).catch(console.error);
 
         console.log(res)
+        router.refresh();
     }
 
     const semanticSearch = async () => {
@@ -103,6 +109,7 @@ export default function AudioItem({audioData}: {audioData: AudioData}) {
             }).catch(console.error);
 
             console.log(res)
+            router.refresh();
         }
     }
 
@@ -114,9 +121,9 @@ export default function AudioItem({audioData}: {audioData: AudioData}) {
             <div>
                 {transcription ? <p>{transcription}</p> : <button onClick={transcribe}>Transcribe</button>}
                 <button onClick={summarize}>Summarize</button>
-                <button onClick={deleteItem}>Delete</button>
                 <button onClick={generate_embeddings}>Enable Search</button>
                 <button onClick={semanticSearch}>Search</button>
+                <button onClick={deleteItem}>Delete</button>
             </div>
         </div>
     )

@@ -1,4 +1,5 @@
 "use client"
+import { useRouter } from "next/navigation";
 import { useState, useRef } from "react";
 
 const AudioRecorder = () => {
@@ -15,6 +16,8 @@ const AudioRecorder = () => {
 	const [audioChunks, setAudioChunks] = useState<BlobPart[]>([]);
 
     const [transcription, setTranscription] = useState<string | null>(null)
+
+	const router = useRouter();
 
 	const getMicrophonePermission = async () => {
 		if ("MediaRecorder" in window) {
@@ -68,6 +71,7 @@ const AudioRecorder = () => {
 			setAudio(audioUrl);
 			await uploadAudio(audioBlob);
 			setAudioChunks([]);
+			router.refresh();
 		};
 	};
 

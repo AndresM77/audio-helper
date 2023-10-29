@@ -4,6 +4,7 @@ import AudioRecorder from './AudioRecorder'
 import AudioItem from './AudioItem'
 import AuthButton from '@/components/AuthButton'
 import { redirect } from 'next/navigation'
+import RealtimeAudioItems from './RealtimeAudioItems'
 
 
 export const dynamic = 'force-dynamic'
@@ -22,9 +23,7 @@ export default async function Home() {
     <div>
         <AuthButton/>
         <AudioRecorder/>
-        {audioItems?.map(audioData => 
-            <AudioItem audioData={audioData}/>
-        )}
+        {audioItems && <RealtimeAudioItems audioItems={audioItems}/>}
     </div>
     )
 }

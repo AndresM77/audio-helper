@@ -4,6 +4,7 @@ import { AudioData } from "@/lib/database.types";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useEffect } from "react";
+import { Accordion } from "./Accordion";
 
 export default function AudioItem({audioData}: {audioData: AudioData}) {
     const [audioUrl, setAudioUrl] = useState<string | null>(null);
@@ -115,16 +116,24 @@ export default function AudioItem({audioData}: {audioData: AudioData}) {
 
     return(
         <div>
-            {audioUrl ? <div className="audio-player">
-                <audio src={audioUrl} controls></audio>
-            </div> : <h1>This item does not have an audio file associated. Please delete!</h1>}
-            <div>
-                {transcription ? <p>{transcription}</p> : <button onClick={transcribe}>Transcribe</button>}
-                <button onClick={summarize}>Summarize</button>
-                <button onClick={generate_embeddings}>Enable Search</button>
-                <button onClick={semanticSearch}>Search</button>
-                <button onClick={deleteItem}>Delete</button>
-            </div>
+            <Accordion 
+                title={
+                    audioUrl ? 
+                        <div className="audio-player">
+                            <audio src={audioUrl} controls></audio>
+                        </div> : 
+                        <h1>This item does not have an audio file associated. Please delete!</h1>
+                } 
+                content={
+                    <div>
+                        {transcription ? <p>{transcription}</p> : <button onClick={transcribe}>Transcribe</button>}
+                        <button onClick={summarize}>Summarize</button>
+                        <button onClick={generate_embeddings}>Enable Search</button>
+                        <button onClick={semanticSearch}>Search</button>
+                        <button onClick={deleteItem}>Delete</button>
+                    </div>
+                }
+            />
         </div>
     )
 }

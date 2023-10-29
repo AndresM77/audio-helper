@@ -74,30 +74,11 @@ const AudioRecorder = () => {
 	const uploadAudio = async (audioBlob: Blob) => {
 		const formData = new FormData();
   		formData.append("file", audioBlob);
-		await fetch("supabase/upload_audio", {
+		await fetch("supabase/upload-audio", {
           method: "POST",
           body: formData,
         });
 	}
-
-    const transcribe = async (audioBlob: Blob) => {
-        const formData = new FormData();
-        formData.append("file", audioBlob);
-        formData.append("model", "whisper-1");
-        formData.append("language", "en");
-
-        const res = await fetch("https://api.openai.com/v1/audio/transcriptions", {
-          headers: {
-            Authorization: `Bearer ${process.env.NEXT_PUBLIC_OPENAI_API_KEY ?? ""}`,
-          },
-          method: "POST",
-          body: formData,
-        });
-    
-        const data = await res.json();
-        setTranscription(data.text);
-      };
-	
 
 	return (
 		<div>

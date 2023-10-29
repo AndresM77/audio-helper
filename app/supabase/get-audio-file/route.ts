@@ -13,9 +13,9 @@ export async function GET (request: NextRequest) {
         return NextResponse.json({ error: "No audio file id specified" }, {status:400});
     }
     const {data, error} = await supabase.storage.from("audio").download(user?.id + "/" + audioFileId)
+
     if (data) {
         return new NextResponse(data, {status: 200, statusText: "OK"})
-    } else {
-        console.log(error)
-    }
+    } 
+    return NextResponse.json({ error: error.message}, {status:500});
 }

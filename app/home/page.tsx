@@ -1,4 +1,3 @@
-import { AudioData } from '@/lib/database.types'
 import { createClient } from '@/utils/supabase/server'
 import { cookies } from 'next/headers'
 import AudioRecorder from './AudioRecorder'
@@ -22,7 +21,6 @@ export default async function Home() {
     return (
     <div>
         <AuthButton/>
-        <h1>Hello</h1>
         <AudioRecorder/>
         {audioItems?.map(audioData => 
             <AudioItem audioData={audioData}/>

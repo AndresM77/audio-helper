@@ -16,11 +16,11 @@ export async function POST (request: Request) {
     return NextResponse.json({ error: "Failed to retrieve audio form object" }, {status:400});
   }
 
-  const {data, error} = await supabase.storage.from("audio").upload(user?.id + "/" + fileId, audioForm, {
+  const { error } = await supabase.storage.from("audio").upload(user?.id + "/" + fileId, audioForm, {
     contentType: "audio/mpeg"
   })
   if (!error) {
-    const {data, error} = await supabase.from("audio_data").insert({audio_file_id: fileId, user_id: user?.id,})
+    const { error } = await supabase.from("audio_data").insert({audio_file_id: fileId, user_id: user?.id,})
     if (error) {
       return NextResponse.json({ error: error ? error.message : "Audio item failed to uplaod" }, {status:500});
     }

@@ -48,7 +48,6 @@ export default function AudioItem({audioData}: {audioData: AudioData}) {
             });
 
             const data = await res.json();
-            console.log(audioData.id)
             const res2 = await fetch("supabase/update-transcription", {
                 method: "POST",
                 body: JSON.stringify({inputText: data.text, audioItemId: audioData.id})
@@ -83,7 +82,24 @@ export default function AudioItem({audioData}: {audioData: AudioData}) {
     }
 
     const deleteItem = async () => {
+        const res = await fetch("supabase/delete-audio-item", {
+            method: "POST",
+            body: JSON.stringify({audioItemId: audioData.id})
+        }).catch(console.error);
 
+        console.log(res)
+    }
+
+    const semanticSearch = async () => {
+        const temp_search = `what kind of problems is the earth experiencing`
+        if (temp_search) {
+            const res = await fetch("openai/semantic-search", {
+                method: "POST",
+                body: JSON.stringify({inputText: temp_search, audioItemId: audioData.id})
+            }).catch(console.error);
+
+            console.log(res)
+        }
     }
 
     return(
@@ -95,7 +111,8 @@ export default function AudioItem({audioData}: {audioData: AudioData}) {
                 {transcription ? <p>{transcription}</p> : <button onClick={transcribe}>Transcribe</button>}
                 <button onClick={summarize}>Summarize</button>
                 <button onClick={deleteItem}>Delete</button>
-                <button onClick={generate_embeddings}>Generate Embeddings</button>
+                <button onClick={generate_embeddings}>Enable Search</button>
+                <button onClick={semanticSearch}>Search</button>
             </div>
         </div>
     )

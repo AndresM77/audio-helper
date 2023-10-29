@@ -5,4 +5,5 @@ export type AudioData = {
     summary: string;
     audio_file_id: string;
     user_id: string;
+    embeddings: boolean
   }

@@ -34,7 +34,6 @@ async function updateEmbeddings(embeddingItems: any[][], audioItemId: string) {
   const supabase = createClient(cookieStore)
   for (const embeddingItem of embeddingItems) {
     const { error } = await supabase.from("audio_embeddings").insert({audio_data_id: audioItemId, embedding: embeddingItem[1], body: embeddingItem[0]})
-    console.log(error?.message)
 
     if (error) {
         return NextResponse.json({ error: error.message}, {status:500});

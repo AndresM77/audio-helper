@@ -1,8 +1,8 @@
 import './globals.css'
 
 export const metadata = {
-  title: 'Next.js and Supabase Starter Kit',
-  description: 'The fastest way to build apps with Next.js and Supabase',
+  title: 'Audio Helper',
+  description: 'The best way to record your meetings',
 }
 
 export default function RootLayout({

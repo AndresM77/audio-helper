@@ -101,19 +101,6 @@ export default function AudioItem({audioData}: {audioData: AudioData}) {
         router.refresh();
     }
 
-    const semanticSearch = async () => {
-        const temp_search = `what kind of problems is the earth experiencing`
-        if (temp_search) {
-            const res = await fetch("openai/semantic-search", {
-                method: "POST",
-                body: JSON.stringify({inputText: temp_search, audioItemId: audioData.id})
-            }).catch(console.error);
-
-            console.log(res)
-            router.refresh();
-        }
-    }
-
     return(
         <div>
             {audioUrl ?
@@ -127,23 +114,22 @@ export default function AudioItem({audioData}: {audioData: AudioData}) {
                     content={
                         <div className="flex flex-col items-center gap-4">
                             <p className="text-xl base:text-xl items-center justify-center !leading-tight font-bold">{audioData.heading}</p>
-                            <div className="flex flex-col gap-2">
+                            <div className="flex flex-col gap-2 items-center justify-center">
+                                {audioData.transcript && audioData.summary && 
+                                    <Accordion title={"Summary"} created_at={null}
+                                        content={<p>{audioData.summary}</p>}/>}
                                 {audioData.transcript ? 
-                                        <div>{audioData.summary ? 
-                                            <Accordion title={"Summary"}
-                                                content={<p>{audioData.summary}</p>}/>: 
-                                            <button className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" onClick={summarize}>Summarize</button>}
-                                        </div> : null}
-                                {audioData.transcript ? 
-                                    <Accordion title={"Transcript"}
+                                    <Accordion title={"Transcript"} created_at={null}
                                         content={<p>{audioData.transcript}</p>}/>: 
                                     <button className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" onClick={transcribe}>Transcribe</button>}
+                                {audioData.transcript && !audioData.summary && <button className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" onClick={summarize}>Summarize</button>}
                                 {audioData.transcript && audioData.summary && !audioData.embeddings ? <button className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" onClick={generate_embeddings}>Enable Search</button> : null}
                                 {audioData.transcript && audioData.summary && audioData.embeddings ? <Modal audioData={audioData}/> : null}
-                                <button className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" onClick={deleteItem}>Delete</button>
+                                <button className="text-red-500 active:bg-red-600 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" onClick={deleteItem}>Delete</button>
                             </div>
                         </div>
                     }
+                    created_at={audioData.created_at}
                 />
             </div>: 
             <div role="status">

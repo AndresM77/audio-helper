@@ -4,9 +4,10 @@ import React, { useRef, useState } from 'react'
 interface AccordionProps {
   title: React.ReactNode
   content: React.ReactNode
+  created_at: string | null
 }
 
-export const Accordion: React.FC<AccordionProps> = ({ title, content }) => {
+export const Accordion: React.FC<AccordionProps> = ({ title, content, created_at }) => {
   const [active, setActive] = useState(false)
   const [height, setHeight] = useState('0px')
   const [rotate, setRotate] = useState('transform duration-700 ease')
@@ -23,13 +24,16 @@ export const Accordion: React.FC<AccordionProps> = ({ title, content }) => {
   return (
     <div className="flex flex-col">
       <button
-        className="py-6 box-border appearance-none cursor-pointer focus:outline-none flex flex-row gap-4 items-center justify-between"
+        className="py-1 pb-6 box-border appearance-none cursor-pointer focus:outline-none flex flex-col gap-4 items-center justify-start"
         onClick={toggleAccordion}
       >
-        <div className={`${rotate} inline-block`}>
-            <ChevronUpLogo/>
+        {created_at ? <p className='font-bold'>{created_at}</p> : null}
+        <div className='flex flex-row gap-4 items-center justify-start'>
+          <div className={`${rotate} inline-block`}>
+              <ChevronUpLogo/>
+          </div>
+          <div className="inline-block text-footnote light">{title}</div>
         </div>
-        <div className="inline-block text-footnote light">{title}</div>
       </button>
       <div
         ref={contentSpace}

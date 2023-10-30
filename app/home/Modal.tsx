@@ -50,7 +50,7 @@ export default function Modal({audioData}: {audioData: AudioData}) {
       {showModal ? (
         <>
           <div
-            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none p-6"
           >
             <div className="flex flex-auto w-auto my-6 mx-auto max-w-4xl">
               {/*content*/}
@@ -71,15 +71,20 @@ export default function Modal({audioData}: {audioData: AudioData}) {
                 </div>
                 {/*body*/}
                 {!searchResults ? 
-                        <input
-                            className="rounded-md px-4 py-2 bg-inherit border items-center m-6"
-                            type="input"
-                            id="search"
-                            placeholder="Write your search query"
-                            onChange={evt => setSearchQuery(evt.target.value)}/>:
-                    <div className="p-6">{searchResults}</div>
+                    <input
+                        className="rounded-md px-4 py-2 bg-inherit border items-center m-6"
+                        type="input"
+                        id="search"
+                        placeholder="Write your search query"
+                        onChange={evt => setSearchQuery(evt.target.value)}/>:
+                    <div className="p-6 flex flex-col gap-2">{
+                        searchResults.map((searchResult, index) => 
+                            <div className="flex flex-col gap-1">
+                                <p className="font-bold hover:underline">Result {index + 1}:</p>
+                                <p>"{searchResult}"</p>
+                            </div>
+                    )}</div>
                 }
-                
                 {/*footer*/}
                 <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
                   <button

@@ -27,7 +27,7 @@ export default async function Home() {
                 <AuthButton/>
             </div>
         </nav>
-        <div className="flex flex-col items-center gap-12">
+        <div className="flex flex-col items-center gap-12 p-6">
             <AudioRecorder/>
             {audioItems && 
                 <div className="flex items-center flex-col gap-4">

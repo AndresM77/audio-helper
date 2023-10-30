@@ -12,7 +12,8 @@ export const dynamic = 'force-dynamic'
 export default async function Home() {
     const cookieStore = cookies()
     const supabase = createClient(cookieStore)
-    const {data: audioItems} = await supabase.from('audio_data').select()
+    const { data: { user }} = await supabase.auth.getUser()
+    const {data: audioItems} = await supabase.from('audio_data').select().eq('user_id', user?.id)
     const { data: {session} } = await supabase.auth.getSession()
 
     if (!session) {

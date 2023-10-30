@@ -5,14 +5,15 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useEffect } from "react";
 import { Accordion } from "./Accordion";
+import Modal from "./Modal";
 
 export default function AudioItem({audioData}: {audioData: AudioData}) {
     const [audioUrl, setAudioUrl] = useState<string | null>(null);
     const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
-    const [transcription, setTrascription] = useState<string | null>();
     const router = useRouter();
 
     useEffect(() => {
+        console.log(audioData)
         const fetchData = async () => {
             const res = await fetch(`supabase/get-audio-file?audioFileId=${audioData.audio_file_id}`, {
                 method: "GET",
@@ -26,11 +27,11 @@ export default function AudioItem({audioData}: {audioData: AudioData}) {
                 setAudioBlob(resAudioBlob);
             }
         }
-
         fetchData().catch(console.error)
     }, [])
 
     const transcribe = async () => {
+        console.log(audioData)
         if (audioBlob) {
             if (audioBlob.size > 25 * 1024 * 1024) {
                 alert("Audio files greater than 25MB cannot be transcribed");
@@ -62,11 +63,10 @@ export default function AudioItem({audioData}: {audioData: AudioData}) {
     } 
 
     const summarize = async () => {
-        const temp_transcription = `Earth is currently experiencing a host of environmental problems. Air and water pollution continue to plague much of the world; exotic plants, animals, and other organisms pop up in parts of the globe that have no natural defense against them; and, all the while, climate change lingers in the headlines. It’s often difficult to find good environmental news, but environmentalists and scientists have reported one bright spot: the countries of the world rallying to combat the problem of ozone depletion. Earth’s protective ozone layer sits some 15 to 35 km [9 to 22 miles] above Earth’s surface, in the stratosphere. Stratospheric ozone loss is worrisome because the ozone layer effectively blocks certain types of ultraviolet (UV) radiation and other forms of radiation that could injure or kill most living things. For 30 years countries around the world had worked together to reduce and eliminate the use of chlorofluorocarbons (CFCs) and other ozone-destroying chemicals (ODCs). However, scientists still could not say whether these efforts were helping. Was the ozone layer actually healing itself? Before getting to the answer, it helps to have some background on the problem. In 1974 American chemists Mario Molina and F. Sherwood Rowland and Dutch chemist Paul Crutzen discovered that human-produced CFCs could be a major source of chlorine in the stratosphere. They also noted that chlorine could destroy extensive amounts of ozone after it was liberated from CFCs by UV radiation. Since then, scientists have tracked how the ozone layer has responded to CFCs, which, since their creation in 1928 had been used as refrigerants, cleaners, and propellants in hairsprays, spray paint, and aerosol containers. In 1985 a paper by the British Antarctic Survey revealed that stratospheric ozone concentrations over Antarctica had been dropping precipitously (by more than 60% compared with global averages) since the late 1970s. Throughout the 1980s and early 1990s, observations and measurements from satellites and other instruments showed that this “hole” over Antarctica was growing larger year after year, that a similar hole had opened over the Arctic, and that stratospheric ozone coverage worldwide had dropped 5% between 1970 and the mid-1990s, with little change afterward. In response to the growing problem, much of the world came together in 1987 to sign the Montreal Protocol on Substances That Deplete the Ozone Layer, an agreement that allowed the world to begin to phase out the manufacturing and use of CFCs—molecules containing only carbon, fluorine, and chlorine atoms—and other ODCs. Follow-up meetings throughout the 1990s and early 2000s produced amendments aimed at limiting, reducing, and eliminating hydrobromofluorocarbons (HBFCs), methyl bromide, carbon tetrachloride, trichloroethane, hydrofluorocarbons (HFCs), hydrochlorofluorocarbons (HCFCs), and other ODCs. Even though nearly all of the planet’s governments had been working diligently toward a common goal—good news in itself—it was unclear whether these unprecedented efforts were having much of an effect. In 2014, however, scientists received the first bit of good news on this topic: the first small increases in stratospheric ozone in more than 20 years had been detected, along with evidence that ODCs had declined by 10–15% in the atmosphere. Yet they remained cautious. Some two years later, scientists got sufficient data to confidently reveal proof that the ozone layer was indeed on a path to recovery. The 2016 study, which tracked the evolution of the size of the ozone hole over Antarctica, observed that stratospheric ozone concentrations were continuing to increase and that the size of the Antarctic ozone hole had declined by half the size of the continental U.S. between 2000 and 2015. They expected the ozone layer to fully heal sometime between 2040 and 2070. In 2023, a United Nations study brought these estimates into further focus. It found that if countries continued to adhere to the limits imposed by the Montreal Protocol and its follow-on agreements, the world could expect that ozone concentrations would largely return to their pre-1980 levels by 2040, with the Arctic reaching pre-1980 levels by 2045 and the Antarctic following suit by 2066.`
-        if (temp_transcription) {
+        if (audioData.transcript) {
             const res = await fetch("openai/generate-summary", {
                 method: "POST",
-                body: JSON.stringify({inputText: temp_transcription, audioItemId: audioData.id})
+                body: JSON.stringify({inputText: audioData.transcript, audioItemId: audioData.id})
             }).catch(console.error);
 
             console.log(res)
@@ -79,11 +79,11 @@ export default function AudioItem({audioData}: {audioData: AudioData}) {
             console.log("Error: Embeddings already generated")
             return
         }
-        const temp_transcription = `Earth is currently experiencing a host of environmental problems. Air and water pollution continue to plague much of the world; exotic plants, animals, and other organisms pop up in parts of the globe that have no natural defense against them; and, all the while, climate change lingers in the headlines. It’s often difficult to find good environmental news, but environmentalists and scientists have reported one bright spot: the countries of the world rallying to combat the problem of ozone depletion. Earth’s protective ozone layer sits some 15 to 35 km [9 to 22 miles] above Earth’s surface, in the stratosphere. Stratospheric ozone loss is worrisome because the ozone layer effectively blocks certain types of ultraviolet (UV) radiation and other forms of radiation that could injure or kill most living things. For 30 years countries around the world had worked together to reduce and eliminate the use of chlorofluorocarbons (CFCs) and other ozone-destroying chemicals (ODCs). However, scientists still could not say whether these efforts were helping. Was the ozone layer actually healing itself? Before getting to the answer, it helps to have some background on the problem. In 1974 American chemists Mario Molina and F. Sherwood Rowland and Dutch chemist Paul Crutzen discovered that human-produced CFCs could be a major source of chlorine in the stratosphere. They also noted that chlorine could destroy extensive amounts of ozone after it was liberated from CFCs by UV radiation. Since then, scientists have tracked how the ozone layer has responded to CFCs, which, since their creation in 1928 had been used as refrigerants, cleaners, and propellants in hairsprays, spray paint, and aerosol containers. In 1985 a paper by the British Antarctic Survey revealed that stratospheric ozone concentrations over Antarctica had been dropping precipitously (by more than 60% compared with global averages) since the late 1970s. Throughout the 1980s and early 1990s, observations and measurements from satellites and other instruments showed that this “hole” over Antarctica was growing larger year after year, that a similar hole had opened over the Arctic, and that stratospheric ozone coverage worldwide had dropped 5% between 1970 and the mid-1990s, with little change afterward. In response to the growing problem, much of the world came together in 1987 to sign the Montreal Protocol on Substances That Deplete the Ozone Layer, an agreement that allowed the world to begin to phase out the manufacturing and use of CFCs—molecules containing only carbon, fluorine, and chlorine atoms—and other ODCs. Follow-up meetings throughout the 1990s and early 2000s produced amendments aimed at limiting, reducing, and eliminating hydrobromofluorocarbons (HBFCs), methyl bromide, carbon tetrachloride, trichloroethane, hydrofluorocarbons (HFCs), hydrochlorofluorocarbons (HCFCs), and other ODCs. Even though nearly all of the planet’s governments had been working diligently toward a common goal—good news in itself—it was unclear whether these unprecedented efforts were having much of an effect. In 2014, however, scientists received the first bit of good news on this topic: the first small increases in stratospheric ozone in more than 20 years had been detected, along with evidence that ODCs had declined by 10–15% in the atmosphere. Yet they remained cautious. Some two years later, scientists got sufficient data to confidently reveal proof that the ozone layer was indeed on a path to recovery. The 2016 study, which tracked the evolution of the size of the ozone hole over Antarctica, observed that stratospheric ozone concentrations were continuing to increase and that the size of the Antarctic ozone hole had declined by half the size of the continental U.S. between 2000 and 2015. They expected the ozone layer to fully heal sometime between 2040 and 2070. In 2023, a United Nations study brought these estimates into further focus. It found that if countries continued to adhere to the limits imposed by the Montreal Protocol and its follow-on agreements, the world could expect that ozone concentrations would largely return to their pre-1980 levels by 2040, with the Arctic reaching pre-1980 levels by 2045 and the Antarctic following suit by 2066.`
-        if (temp_transcription) {
+
+        if (audioData.transcript) {
             const res = await fetch("openai/generate-embeddings", {
                 method: "POST",
-                body: JSON.stringify({inputText: temp_transcription, audioItemId: audioData.id})
+                body: JSON.stringify({inputText: audioData.transcript, audioItemId: audioData.id})
             }).catch(console.error);
 
             console.log(res)
@@ -116,24 +116,43 @@ export default function AudioItem({audioData}: {audioData: AudioData}) {
 
     return(
         <div>
-            <Accordion 
-                title={
-                    audioUrl ? 
+            {audioUrl ?
+            <div className="block max-w-sm p-6 bg-white border border-gray-100 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-800 dark:hover:bg-gray-700">
+                <Accordion
+                    title={
                         <div className="audio-player">
                             <audio src={audioUrl} controls></audio>
-                        </div> : 
-                        <h1>This item does not have an audio file associated. Please delete!</h1>
-                } 
-                content={
-                    <div>
-                        {transcription ? <p>{transcription}</p> : <button onClick={transcribe}>Transcribe</button>}
-                        <button onClick={summarize}>Summarize</button>
-                        <button onClick={generate_embeddings}>Enable Search</button>
-                        <button onClick={semanticSearch}>Search</button>
-                        <button onClick={deleteItem}>Delete</button>
-                    </div>
-                }
-            />
+                        </div>
+                    } 
+                    content={
+                        <div className="flex flex-col items-center gap-4">
+                            <p className="text-xl base:text-xl items-center justify-center !leading-tight font-bold">{audioData.heading}</p>
+                            <div className="flex flex-col gap-2">
+                                {audioData.transcript ? 
+                                        <div>{audioData.summary ? 
+                                            <Accordion title={"Summary"}
+                                                content={<p>{audioData.summary}</p>}/>: 
+                                            <button className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" onClick={summarize}>Summarize</button>}
+                                        </div> : null}
+                                {audioData.transcript ? 
+                                    <Accordion title={"Transcript"}
+                                        content={<p>{audioData.transcript}</p>}/>: 
+                                    <button className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" onClick={transcribe}>Transcribe</button>}
+                                {audioData.transcript && audioData.summary && !audioData.embeddings ? <button className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" onClick={generate_embeddings}>Enable Search</button> : null}
+                                {audioData.transcript && audioData.summary && audioData.embeddings ? <Modal audioData={audioData}/> : null}
+                                <button className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" onClick={deleteItem}>Delete</button>
+                            </div>
+                        </div>
+                    }
+                />
+            </div>: 
+            <div role="status">
+                <svg aria-hidden="true" className="w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                    <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                </svg>
+                <span className="sr-only">Loading...</span>
+            </div>}
         </div>
     )
 }

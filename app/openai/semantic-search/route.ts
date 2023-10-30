@@ -28,14 +28,18 @@ export async function POST (request: Request) {
 
   const embedding = response.data[0].embedding
 
-  const { data: documents } = await supabase.rpc('search_embeddings', {
+  const { data: documents, error } = await supabase.rpc('search_embeddings', {
     query_embedding: embedding,
     match_threshold: 0.75,
     match_count: 5,
     query_audio_data_id: audioItemId,
   })
 
+  if (error) {
+    return NextResponse.json({ error: error.message}, {status:500}); 
+  }
+
   console.log(documents)
   console.log("semantic search")
-  return new NextResponse(documents, {status: 200, statusText: "OK"})
+  return NextResponse.json({documents}, {status: 200})
 }   

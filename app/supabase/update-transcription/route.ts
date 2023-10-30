@@ -6,7 +6,7 @@ export async function POST (request: Request) {
   const cookieStore = cookies()
   const supabase = createClient(cookieStore)
   const { inputText, audioItemId } = await request.json();
-  const { error } = await supabase.from("audio_data").update({trascript: inputText}).eq('id', audioItemId)
+  const { error } = await supabase.from("audio_data").update({transcript: inputText}).eq('id', audioItemId)
 
   if (error) {
     return NextResponse.json({ error: error.message}, {status:500});

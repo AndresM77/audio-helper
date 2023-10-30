@@ -43,7 +43,7 @@ export async function POST (request: Request) {
 
   const response = await openai.completions.create({
     model: "gpt-3.5-turbo-instruct",
-    max_tokens: 50,
+    max_tokens: 15,
     prompt: prompt
   })
 

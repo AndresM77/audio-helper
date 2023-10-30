@@ -23,7 +23,7 @@ export const Accordion: React.FC<AccordionProps> = ({ title, content }) => {
   return (
     <div className="flex flex-col">
       <button
-        className="py-6 box-border appearance-none cursor-pointer focus:outline-none flex items-center justify-between"
+        className="py-6 box-border appearance-none cursor-pointer focus:outline-none flex flex-row gap-4 items-center justify-between"
         onClick={toggleAccordion}
       >
         <div className={`${rotate} inline-block`}>

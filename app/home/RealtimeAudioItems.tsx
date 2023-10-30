@@ -29,7 +29,7 @@ export default function RealtimeAudioItems({audioItems} : {audioItems : AudioDat
     return(
         <>  
             {audioItems.map((audioData: AudioData) => 
-                <AudioItem audioData={audioData} key={audioData.id}/>
+                <AudioItem audioData={audioData} key={audioData.created_at}/>
                 )}
         </>
     )

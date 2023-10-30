@@ -9,7 +9,6 @@ export default function Modal({audioData}: {audioData: AudioData}) {
     const [searchResults, setSearchResults] = React.useState<string[] | null>(null)
 
     const semanticSearch = async () => {
-        console.log(searchQuery)
         if (searchQuery) {
             const res = await fetch("openai/semantic-search", {
                 method: "POST",
@@ -26,6 +25,8 @@ export default function Modal({audioData}: {audioData: AudioData}) {
             Object.entries(resultJson.documents).forEach( ([key, value] : [any, any]) => {
                 topResults.push(value["content"])
             });
+
+            console.log(resultJson)
 
             setSearchResults(topResults)
             router.refresh();
@@ -79,7 +80,7 @@ export default function Modal({audioData}: {audioData: AudioData}) {
                         onChange={evt => setSearchQuery(evt.target.value)}/>:
                     <div className="p-6 flex flex-col gap-2">{
                         searchResults.map((searchResult, index) => 
-                            <div className="flex flex-col gap-1">
+                            <div className="flex flex-col gap-1" key={index}>
                                 <p className="font-bold hover:underline">Result {index + 1}:</p>
                                 <p>"{searchResult}"</p>
                             </div>

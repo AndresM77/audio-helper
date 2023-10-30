@@ -57,7 +57,6 @@ export default function AudioItem({audioData}: {audioData: AudioData}) {
                 body: JSON.stringify({inputText: data.text, audioItemId: audioData.id})
             }).catch(console.error);
 
-            console.log(res2)
             router.refresh();
         }
     } 
@@ -69,15 +68,13 @@ export default function AudioItem({audioData}: {audioData: AudioData}) {
                 body: JSON.stringify({inputText: audioData.transcript, audioItemId: audioData.id})
             }).catch(console.error);
 
-            console.log(res)
             router.refresh();
         }
     }
 
     const generate_embeddings = async () => {
         if (audioData.embeddings) {
-            console.log("Error: Embeddings already generated")
-            return
+            console.log("Regenerating embeddings")
         }
 
         if (audioData.transcript) {
@@ -86,7 +83,6 @@ export default function AudioItem({audioData}: {audioData: AudioData}) {
                 body: JSON.stringify({inputText: audioData.transcript, audioItemId: audioData.id})
             }).catch(console.error);
 
-            console.log(res)
             router.refresh();
         }
     }
@@ -97,7 +93,6 @@ export default function AudioItem({audioData}: {audioData: AudioData}) {
             body: JSON.stringify({audioItemId: audioData.id})
         }).catch(console.error);
 
-        console.log(res)
         router.refresh();
     }
 
@@ -114,7 +109,7 @@ export default function AudioItem({audioData}: {audioData: AudioData}) {
                     content={
                         <div className="flex flex-col items-center gap-4">
                             <p className="text-xl base:text-xl items-center justify-center !leading-tight font-bold">{audioData.heading}</p>
-                            <div className="flex flex-col gap-2 items-center justify-center">
+                            <div className="flex flex-col gap-2 justify-start">
                                 {audioData.transcript && audioData.summary && 
                                     <Accordion title={"Summary"} created_at={null}
                                         content={<p>{audioData.summary}</p>}/>}
@@ -123,9 +118,12 @@ export default function AudioItem({audioData}: {audioData: AudioData}) {
                                         content={<p>{audioData.transcript}</p>}/>: 
                                     <button className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" onClick={transcribe}>Transcribe</button>}
                                 {audioData.transcript && !audioData.summary && <button className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" onClick={summarize}>Summarize</button>}
-                                {audioData.transcript && audioData.summary && !audioData.embeddings ? <button className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" onClick={generate_embeddings}>Enable Search</button> : null}
-                                {audioData.transcript && audioData.summary && audioData.embeddings ? <Modal audioData={audioData}/> : null}
-                                <button className="text-red-500 active:bg-red-600 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" onClick={deleteItem}>Delete</button>
+                                {audioData.transcript && audioData.summary && !audioData.embeddings && <button className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" onClick={generate_embeddings}>Enable Search</button>}
+                                <div className="flex flex-col gap-2 items-center justify-center">
+                                    {audioData.transcript && audioData.summary && audioData.embeddings ? <Modal audioData={audioData}/> : null}
+                                    <button className="text-red-500 active:bg-red-600 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" onClick={deleteItem}>Delete</button>
+                                </div>
+                                
                             </div>
                         </div>
                     }

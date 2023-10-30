@@ -24,7 +24,7 @@ export const Accordion: React.FC<AccordionProps> = ({ title, content, created_at
   return (
     <div className="flex flex-col">
       <button
-        className="py-1 pb-6 box-border appearance-none cursor-pointer focus:outline-none flex flex-col gap-4 items-center justify-start"
+        className="py-1 pb-6 box-border appearance-none cursor-pointer focus:outline-none flex flex-col gap-4 justify-start"
         onClick={toggleAccordion}
       >
         {created_at ? <p className='font-bold'>{created_at}</p> : null}

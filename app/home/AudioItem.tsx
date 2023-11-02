@@ -99,7 +99,7 @@ export default function AudioItem({audioData}: {audioData: AudioData}) {
     return(
         <div>
             {audioUrl ?
-            <div className="block max-w-lg p-6 bg-white border border-gray-100 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-800 dark:hover:bg-gray-700">
+            <div className="block max-w-lg min-w-lg p-6 bg-white border border-gray-100 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-800 dark:hover:bg-gray-700">
                 <Accordion
                     title={
                         <div className="audio-player">

@@ -27,11 +27,12 @@ export default function RealtimeAudioItems({audioItems} : {audioItems : AudioDat
     }, [supabase, router]);
 
     return(
-        <>  
-            {audioItems.map((audioData: AudioData) => 
-                <AudioItem audioData={audioData} key={audioData.created_at}/>
+        <div className="flex flex-col gap-4 w-lg">  
+            {audioItems.map((audioData: AudioData) => {
+                const givenDate = new Date(audioData.created_at)
+                return <AudioItem audioData={audioData} key={givenDate.valueOf()}/>}
                 )}
-        </>
+        </div>
     )
     
 }

@@ -1,7 +1,7 @@
 # Audio Helper
 ## Relevant links
-[Website](https://audio-helper.vercel.app/home)
-[Video Demo](https://drive.google.com/file/d/1dxOX1XmBcXTJFjX4-K-53Tzm38iYuGIL/view?usp=sharing)
+- [Website](https://audio-helper.vercel.app/home)
+- [Video Demo](https://drive.google.com/file/d/1dxOX1XmBcXTJFjX4-K-53Tzm38iYuGIL/view?usp=sharing)
 
 ## How I did transcription
 I transcribed the audio directly from the client side. This was an interesting problem to figure out due to how OpenAI had their packages setup. If you were to try to transcribe data through one of OpenAI’s packages you would need to actually download your file to the server so you can reference the file location when using the api. This forces you to queue all of your api requests related to transcription (if multiple users were transcribing at the same time) as you need to wait for each user to write and remove their mp3 file (slowing down things further especially for big audio files). This was one of the main reasons I decided to switch off Flask (I originally set up the project with NextJS and Flask) and rewrote the whole website with a pure NodeJs backend as well.
